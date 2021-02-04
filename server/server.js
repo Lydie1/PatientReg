@@ -2,6 +2,8 @@ import dotenv from "dotenv";
 import app from "./index";
 import mongoose from "mongoose";
 
+
+
 dotenv.config({ path: "./server/config.env" });
 
 
@@ -17,4 +19,4 @@ mongoose.connect(DB,{
 
 const server = app.listen(port, () =>
   process.stdout.write(`Listening on port ${port} ...\n******************** \n`)
-);
+);                                                                                                                                                                                                                                                                                            

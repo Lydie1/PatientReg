@@ -2,70 +2,75 @@ import patientInfos from "../models/Patient";
 
 export const createPatient = async (req,res)=>{
 
+try{
     const newPatient = await patientInfos.create(req.body);
-
     res.status(201).json({
         status:"success",
         newPatient
-    })
-}
-export const getPatient = (req,res) =>{
-    patientInfos.findById(req.params.id, (err,patientInfos) =>{
-        if (err){
-            console.log(err)
-        }else {
-            console.log(patientInfos)
-            res.status(200).json({
-                status:"success",
-                patientInfos,
             })
-        }
-    })
+        } catch(err){
+            res.status(500)
+            }
 }
+    
 
-//UPDATE
 
-export const updatePatient = (req,res) =>{
-    let patient = {};
+    export const getSinglePatient = async(req,res)=>{
+        try{
+        const patient = await patientInfos.findById(req.params.id)
+                res.status(200).json({
+                   status:"success",
+                   patient
+                
+            })
+        } catch(err){
+            res.status(500)
+            }
+        
+        }
+
+
+export const updateSinglePatient = async (req,res)=>{
+    let patient= {};
     patient.patientName=req.body.patientName;
-    patient.phone = req.body.phone;
-    patient.home = req.body.home;
-    patient.email = req.body.email;
+    patient.phone=req.body.phone;
+    patient.home=req.body.home;
+    patient.email=req.body.email;
     let query = {_id:req.params.id}
-    patientInfos.updateOne(query, patient , (err) =>{
-        if (err){
-            console.log(err)
-            return ;
-        }else {
+    try
+    {
+    const updatePatient = await patientInfos.updateOne(query, patient)
             res.status(200).json({
-                status:"updated successfully",
-                patientInfos
-            })
-        }
-    })
+                status:"Updated success",   
+            }) 
+    
+        
+    } catch(err){
+        res.status(500)
+    }
 }
+  
+  export const deleteSinglePatient = async (req, res) => {
 
-//DELETING
-
-export const deletePatient = (req,res) =>{
-    console.log("Deleted")
     let query = {_id:req.params.id}
-    patientInfos.deleteOne(query,(err) =>{
-        if(err){
-            console.log(err)
-        }else {
-            console.log('Deleted');
-            res.send("Deleted Successfully")
+    try
+    {
+    const patient = await patientInfos.deleteOne(query)
+        res.send('Deleted Successfully') 
+        res.send(allPatient)
+
+    } catch(err){
+    res.status(500)
+    }
+}
+
+      
+export const getAllPatient = async (req,res) => {
+    try{
+    const allPatient = await patientInfos.find({})
+        res.send(allPatient)
+    } catch(err){
+        res.status(500)
         }
-    })
-}
-
-//GET ALL Data
-
-export const getAllPatient = (req,res) =>{
-    patientInfos.find({}).then ((patients) =>{
-        res.send(patients)
-    }).catch((e) => {
-        res.status(500).send(e)
-    })
-}
+  
+    }
